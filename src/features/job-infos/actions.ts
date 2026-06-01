@@ -2,7 +2,11 @@
 
 import z from "zod";
 import { jobInfoSchema } from "./schemas";
-import { insertJobInfo, updateJobInfo as updateJobInfoDb } from "./db";
+import {
+  deleteJobInfo as deleteJobInfoDb,
+  insertJobInfo,
+  updateJobInfo as updateJobInfoDb,
+} from "./db";
 import { redirect } from "next/navigation";
 import { and, desc, eq } from "drizzle-orm";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
@@ -64,6 +68,28 @@ export async function updateJobInfo(
   const jobInfo = await updateJobInfoDb(id, data);
 
   redirect(`/dashboard/job-infos/${jobInfo.id}`);
+}
+
+export async function deleteJobInfo(id: string) {
+  const { userId } = await getCurrentUser();
+  if (userId == null) {
+    return {
+      error: true,
+      message: "You don't have permission to do this",
+    };
+  }
+
+  const existingJobInfo = await getJobInfo(id, userId);
+  if (existingJobInfo == null) {
+    return {
+      error: true,
+      message: "You don't have permission to do this",
+    };
+  }
+
+  await deleteJobInfoDb(id);
+
+  return { error: false as const };
 }
 
 export async function getJobInfoWithoutUserCheck(id: string) {

@@ -13,6 +13,7 @@ import {
 } from "@/src/components/ui/card";
 import { formatExperienceLevel } from "@/src/features/job-infos/lib/format-experience-level";
 import { Badge } from "@/src/components/ui/badge";
+import { DeleteJobInfoButton } from "@/src/features/job-infos/components/delete-job-info-button";
 
 export async function JobInfos() {
   const { userId, redirectToSignIn } = await getCurrentUser();
@@ -46,8 +47,9 @@ export async function JobInfos() {
           >
             <Card className="h-full">
               <div className="space-y-4 h-full">
-                <CardHeader>
+                <CardHeader className="flex items-center justify-between gap-2">
                   <CardTitle className="text-lg">{jobInfo.name}</CardTitle>
+                  <DeleteJobInfoButton id={jobInfo.id} name={jobInfo.name} />
                 </CardHeader>
 
                 <CardContent className="text-muted-foreground line-clamp-3 flex justify-between items-center gap-4">
