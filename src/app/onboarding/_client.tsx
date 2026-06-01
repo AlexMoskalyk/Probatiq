@@ -18,7 +18,7 @@ export function OnboardingClient(props: Props) {
       const user = await getUser(userId);
       if (user == null) return;
 
-      router.replace("/app");
+      router.replace("/dashboard");
       clearInterval(intervalId);
     }, 250);
 

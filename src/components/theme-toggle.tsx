@@ -3,14 +3,14 @@
 import { useTheme } from "next-themes";
 import { Monitor, Moon, Sun } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/src/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
+} from "@/src/components/ui/dropdown-menu";
+import { cn } from "@/src/lib/utils";
 
 const themes = [
   {

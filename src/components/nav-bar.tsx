@@ -13,12 +13,12 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/src/components/ui/dropdown-menu";
 import { SignOutButton, useClerk } from "@clerk/nextjs";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/src/components/ui/button";
+import { ThemeToggle } from "@/src/components/theme-toggle";
 import { UserAvatar } from "@/src/features/users/components/user-avatar";
 
 const navLinks = [
@@ -40,7 +40,7 @@ export function Navbar(props: Props) {
   return (
     <nav className="h-header border-b">
       <div className="container flex h-full items-center justify-between">
-        <Link href="/app" className="flex items-center gap-2">
+        <Link href="/dashboard" className="flex items-center gap-2">
           <BrainCogIcon className="size-8 text-primary" />
           <span className="text-xl font-bold">Probatiq</span>
         </Link>
@@ -48,7 +48,7 @@ export function Navbar(props: Props) {
         <div className="flex items-center gap-4">
           {typeof jobInfoId === "string" &&
             navLinks.map(({ name, href, Icon }) => {
-              const hrefPath = `/app/job-infos/${jobInfoId}/${href}`;
+              const hrefPath = `/dashboard/job-infos/${jobInfoId}/${href}`;
 
               return (
                 <Button

@@ -1,5 +1,6 @@
 import { Loader2Icon } from "lucide-react";
 import { Suspense } from "react";
+import { JobInfos } from "../../components/job-infos";
 
 export default function AppPage() {
   return (
@@ -10,7 +11,7 @@ export default function AppPage() {
         </div>
       }
     >
-      <h1>JobInfo</h1>
+      <JobInfos />
     </Suspense>
   );
 }
