@@ -7,7 +7,7 @@ interface Props extends ComponentProps<typeof Markdown> {
 }
 
 export function MarkdownRenderer(props: Props) {
-  const { className } = props;
+  const { className, ...markdownProps } = props;
   return (
     <div
       className={cn(
@@ -15,7 +15,7 @@ export function MarkdownRenderer(props: Props) {
         className,
       )}
     >
-      <Markdown {...props} />
+      <Markdown {...markdownProps} />
     </div>
   );
 }
