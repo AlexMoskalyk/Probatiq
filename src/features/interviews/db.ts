@@ -1,0 +1,43 @@
+import { db } from "@/src/drizzle/db";
+import { InterviewTable } from "@/src/drizzle/schema";
+import { revalidateInterviewCache } from "./db-cache";
+import { eq } from "drizzle-orm";
+
+export async function insertInterview(
+  interview: typeof InterviewTable.$inferInsert,
+) {
+  const [newInterview] = await db
+    .insert(InterviewTable)
+    .values(interview)
+    .returning({ id: InterviewTable.id, jobInfoId: InterviewTable.jobInfoId });
+
+  revalidateInterviewCache(newInterview);
+
+  return newInterview;
+}
+
+export async function updateInterview(
+  id: string,
+  interview: Partial<typeof InterviewTable.$inferInsert>,
+) {
+  const [newInterview] = await db
+    .update(InterviewTable)
+    .set(interview)
+    .where(eq(InterviewTable.id, id))
+    .returning({ id: InterviewTable.id, jobInfoId: InterviewTable.jobInfoId });
+
+  revalidateInterviewCache(newInterview);
+
+  return newInterview;
+}
+
+export async function deleteInterview(id: string) {
+  const [deleted] = await db
+    .delete(InterviewTable)
+    .where(eq(InterviewTable.id, id))
+    .returning({ id: InterviewTable.id, jobInfoId: InterviewTable.jobInfoId });
+
+  revalidateInterviewCache(deleted);
+
+  return deleted;
+}

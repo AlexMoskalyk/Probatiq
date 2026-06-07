@@ -28,7 +28,7 @@ import {
 } from "@/src/components/ui/form";
 import { jobInfoSchema } from "../schemas";
 import { formatExperienceLevel } from "../lib/format-experience-level";
-import { LoadingSwap } from "@/src/components/ui/login-swap";
+import { LoadingSwap } from "@/src/components/ui/loading-swap";
 
 type JobInfoFormData = z.infer<typeof jobInfoSchema>;
 
