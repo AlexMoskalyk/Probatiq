@@ -15,10 +15,9 @@ import { formatDateTime } from "@/src/lib/formatters";
 import { getCurrentUser } from "@/src/services/clerk/lib/get-current-user";
 import { DeleteInterviewButton } from "@/src/features/interviews/components/delete-interview-button";
 import { and, desc, eq, isNotNull } from "drizzle-orm";
-import { ArrowRightIcon, Loader2Icon, PlusIcon } from "lucide-react";
+import { Loader2Icon, PlusIcon } from "lucide-react";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 type Props = {
@@ -48,7 +47,7 @@ async function SuspendedPage({ jobInfoId }: { jobInfoId: string }) {
 
   const interviews = await getInterviews(jobInfoId, userId);
   if (interviews.length === 0) {
-    return redirect(`/dashboard/job-infos/${jobInfoId}/interviews/new`);
+    return <NoInterviews jobInfoId={jobInfoId} />;
   }
   return (
     <div className="space-y-6 w-full">
@@ -93,13 +92,34 @@ async function SuspendedPage({ jobInfoId }: { jobInfoId: string }) {
                     id={interview.id}
                     date={formatDateTime(interview.createdAt)}
                   />
-                  <ArrowRightIcon className="size-6" />
                 </CardContent>
               </div>
             </Card>
           </Link>
         ))}
       </div>
+    </div>
+  );
+}
+
+function NoInterviews({ jobInfoId }: { jobInfoId: string }) {
+  return (
+    <div className="space-y-6 w-full">
+      <h1 className="text-3xl md:text-4xl lg:text-5xl">Interviews</h1>
+      <Card className="border-dashed text-center">
+        <CardHeader>
+          <CardTitle className="text-xl">No interviews yet</CardTitle>
+          <CardDescription>Practice with an AI interviewer.</CardDescription>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center">
+          <Button asChild>
+            <Link href={`/dashboard/job-infos/${jobInfoId}/interviews/new`}>
+              <PlusIcon />
+              Start your first interview
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }

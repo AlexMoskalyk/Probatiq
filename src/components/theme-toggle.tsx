@@ -35,7 +35,7 @@ export function ThemeToggle() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild className="cursor-pointer">
         <Button variant="ghost" size="icon">
           <Sun className="dark:hidden" />
           <Moon className="hidden dark:block" />

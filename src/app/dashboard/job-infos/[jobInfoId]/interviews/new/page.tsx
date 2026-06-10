@@ -1,11 +1,11 @@
 import { and, eq } from "drizzle-orm";
 import { Loader2Icon } from "lucide-react";
 import { cacheTag } from "next/dist/server/use-cache/cache-tag";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { fetchAccessToken } from "hume";
 
-import { VoiceProvider } from "@humeai/voice-react";
+import { VoiceShell } from "@/src/features/interviews/components/voice-shell";
 
 import { BackLink } from "@/src/components/back-link";
 import { db } from "@/src/drizzle/db";
@@ -22,22 +22,22 @@ export default async function NewInterviewPage({
 }) {
   const { jobInfoId } = await params;
   return (
-    <>
-      <div className="container my-4">
+    <div className="h-screen-header flex flex-col">
+      <div className="container py-4">
         <BackLink href={`/dashboard/job-infos/${jobInfoId}/interviews`}>
           All Interviews
         </BackLink>
       </div>
       <Suspense
         fallback={
-          <div className="h-screen-header flex items-center justify-center">
+          <div className="flex-1 flex items-center justify-center">
             <Loader2Icon className="animate-spin size-24" />
           </div>
         }
       >
         <SuspendedComponent jobInfoId={jobInfoId} />
       </Suspense>
-    </>
+    </div>
   );
 }
 
@@ -56,9 +56,9 @@ async function SuspendedComponent({ jobInfoId }: { jobInfoId: string }) {
   });
 
   return (
-    <VoiceProvider>
+    <VoiceShell>
       <StartCall jobInfo={jobInfo} user={user} accessToken={accessToken} />
-    </VoiceProvider>
+    </VoiceShell>
   );
 }
 

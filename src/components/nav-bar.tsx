@@ -68,7 +68,7 @@ export function Navbar(props: Props) {
           <ThemeToggle />
 
           <DropdownMenu>
-            <DropdownMenuTrigger>
+            <DropdownMenuTrigger className="cursor-pointer">
               <UserAvatar user={user} />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">

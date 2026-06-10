@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/src/components/ui/card";
 import { getJobInfo } from "@/src/features/job-infos/actions";
+import { ViewDescriptionButton } from "@/src/features/job-infos/components/view-description-button";
 
 import { formatExperienceLevel } from "@/src/features/job-infos/lib/format-experience-level";
 
@@ -27,7 +28,7 @@ const options = [
   },
   {
     label: "Practice Interviewing",
-    description: "Simulate a real interview with AI-powered mock interviews.",
+    description: "Simulate a real interview with AI interviewer.",
     href: "interviews",
   },
   {
@@ -38,7 +39,7 @@ const options = [
   },
   {
     label: "Update Job Description",
-    description: "This should only be used for minor updates.",
+    description: "Adjust job details for small tweaks.",
     href: "edit",
   },
 ];
@@ -68,34 +69,41 @@ export default async function JobInfoPage(props: Props) {
 
       <div className="space-y-6">
         <header className="space-y-4">
-          <div className="space-y-2">
-            <h1 className="text-3xl md:text-4xl">
-              <SuspendedItem
-                item={jobInfo}
-                fallback={<Skeleton className="w-48" />}
-                result={(j) => j.name}
-              />
-            </h1>
-            <div className="flex gap-2">
-              <SuspendedItem
-                item={jobInfo}
-                fallback={<Skeleton className="w-12" />}
-                result={(j) => (
-                  <Badge variant="secondary">
-                    {formatExperienceLevel(j.experienceLevel)}
-                  </Badge>
-                )}
-              />
-              <SuspendedItem
-                item={jobInfo}
-                fallback={null}
-                result={(j) => {
-                  return (
-                    j.title && <Badge variant="secondary">{j.title}</Badge>
-                  );
-                }}
-              />
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-2">
+              <h1 className="text-3xl md:text-4xl">
+                <SuspendedItem
+                  item={jobInfo}
+                  fallback={<Skeleton className="w-48" />}
+                  result={(j) => j.name}
+                />
+              </h1>
+              <div className="flex gap-2">
+                <SuspendedItem
+                  item={jobInfo}
+                  fallback={<Skeleton className="w-12" />}
+                  result={(j) => (
+                    <Badge variant="secondary">
+                      {formatExperienceLevel(j.experienceLevel)}
+                    </Badge>
+                  )}
+                />
+                <SuspendedItem
+                  item={jobInfo}
+                  fallback={null}
+                  result={(j) => {
+                    return (
+                      j.title && <Badge variant="secondary">{j.title}</Badge>
+                    );
+                  }}
+                />
+              </div>
             </div>
+            <SuspendedItem
+              item={jobInfo}
+              fallback={null}
+              result={(j) => <ViewDescriptionButton jobInfo={j} />}
+            />
           </div>
           <p className="text-muted-foreground line-clamp-3">
             <SuspendedItem

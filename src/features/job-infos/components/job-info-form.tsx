@@ -37,10 +37,11 @@ type Props = {
     typeof JobInfoTable.$inferSelect,
     "id" | "name" | "title" | "description" | "experienceLevel"
   >;
+  readOnly?: boolean;
 };
 
 export function JobInfoForm(props: Props) {
-  const { jobInfo } = props;
+  const { jobInfo, readOnly = false } = props;
   const form = useForm<JobInfoFormData>({
     resolver: zodResolver(jobInfoSchema),
     defaultValues: jobInfo ?? {
@@ -72,7 +73,7 @@ export function JobInfoForm(props: Props) {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} disabled={readOnly} />
               </FormControl>
               <FormDescription>
                 This name is displayed in the UI for easy identification.
@@ -94,6 +95,7 @@ export function JobInfoForm(props: Props) {
                     {...field}
                     value={field.value ?? ""}
                     onChange={(e) => field.onChange(e.target.value || null)}
+                    disabled={readOnly}
                   />
                 </FormControl>
                 <FormDescription>
@@ -111,7 +113,11 @@ export function JobInfoForm(props: Props) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Experience Level</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  disabled={readOnly}
+                >
                   <FormControl>
                     <SelectTrigger className="w-full">
                       <SelectValue />
@@ -140,7 +146,9 @@ export function JobInfoForm(props: Props) {
               <FormControl>
                 <Textarea
                   placeholder="A Next.js 15 and React 19 full stack web developer job that uses Drizzle ORM and Postgres for database management."
+                  className="max-h-64 overflow-y-auto resize-none"
                   {...field}
+                  disabled={readOnly}
                 />
               </FormControl>
               <FormDescription>
@@ -152,15 +160,19 @@ export function JobInfoForm(props: Props) {
           )}
         />
 
-        <Button
-          disabled={form.formState.isSubmitting}
-          type="submit"
-          className="w-full cursor-pointer"
-        >
-          <LoadingSwap isLoading={form.formState.isSubmitting}>
-            Save Job Information
-          </LoadingSwap>
-        </Button>
+        {!readOnly && (
+          <div className="flex justify-center">
+            <Button
+              disabled={form.formState.isSubmitting}
+              type="submit"
+              className="cursor-pointer"
+            >
+              <LoadingSwap isLoading={form.formState.isSubmitting}>
+                Save Job Information
+              </LoadingSwap>
+            </Button>
+          </div>
+        )}
       </form>
     </Form>
   );

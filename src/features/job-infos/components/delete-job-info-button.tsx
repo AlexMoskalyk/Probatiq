@@ -58,6 +58,7 @@ export function DeleteJobInfoButton(props: Props) {
         type="button"
         onClick={onTriggerClick}
         aria-label={`Delete ${name}`}
+        className="cursor-pointer"
       >
         <Trash2Icon className="size-4" />
       </Button>
