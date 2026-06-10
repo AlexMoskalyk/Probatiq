@@ -21,7 +21,7 @@ export function generateAiQuestion({
     "text" | "difficulty"
   >[];
   difficulty: QuestionDifficulty;
-  onFinish: (question: string) => void;
+  onFinish?: (question: string) => void;
 }) {
   const previousMessages = previousQuestions.flatMap(
     (q) =>
@@ -33,7 +33,7 @@ export function generateAiQuestion({
 
   return streamText({
     model: google("gemini-2.5-flash"),
-    onFinish: ({ text }) => onFinish(text),
+    onFinish: ({ text }) => onFinish?.(text),
     messages: [
       ...previousMessages,
       {

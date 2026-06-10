@@ -45,7 +45,6 @@ export async function POST(req: Request) {
     previousQuestions,
     jobInfo,
     difficulty,
-    onFinish: () => {},
   });
 
   return res.toTextStreamResponse();

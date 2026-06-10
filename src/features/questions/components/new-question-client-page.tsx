@@ -176,15 +176,13 @@ function QuestionContainer({
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel id="answer" defaultSize={50} minSize={5}>
-        <ScrollArea className="h-full min-w-48 *:h-full">
-          <Textarea
-            disabled={status !== "awaiting-answer"}
-            onChange={(e) => setAnswer(e.target.value)}
-            value={answer ?? ""}
-            placeholder="Type your answer here..."
-            className="w-full h-full resize-none border-none rounded-none focus-visible:ring focus-visible:ring-inset !text-base p-6"
-          />
-        </ScrollArea>
+        <Textarea
+          disabled={status !== "awaiting-answer"}
+          onChange={(e) => setAnswer(e.target.value)}
+          value={answer ?? ""}
+          placeholder="Type your answer here..."
+          className="w-full h-full resize-none border-none rounded-none focus-visible:ring focus-visible:ring-inset !text-base p-6"
+        />
       </ResizablePanel>
     </ResizablePanelGroup>
   );
