@@ -39,6 +39,9 @@ export default function ResumePageClient(props: Props) {
 
   const [isDragOver, setIsDragOver] = useState(false);
   const fileRef = useRef<File | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const modelRef = useRef<string>("gemini-2.5-flash");
+  const triedFallbackRef = useRef(false);
 
   const {
     object: aiAnalysis,
@@ -57,7 +60,28 @@ export default function ResumePageClient(props: Props) {
       }
       formData.append("jobInfoId", jobInfoId);
 
-      return fetch(url, { ...options, headers, body: formData });
+      const withModel = `${url}?model=${encodeURIComponent(modelRef.current)}`;
+      return fetch(withModel, { ...options, headers, body: formData });
+    },
+    onError: (err) => {
+      const overloaded = /overloaded|503|UNAVAILABLE/i.test(err.message ?? "");
+
+      if (overloaded && !triedFallbackRef.current && fileRef.current) {
+        triedFallbackRef.current = true;
+        modelRef.current = "gemini-2.0-flash";
+        toast.message("Gemini is busy — retrying with a fallback model.");
+        generateAnalysis(null);
+        return;
+      }
+
+      toast.error(
+        overloaded
+          ? "Gemini is overloaded. Please try again later."
+          : "Failed to analyze resume. Please try again.",
+      );
+
+      if (inputRef.current) inputRef.current.value = "";
+      fileRef.current = null;
     },
   });
 
@@ -82,6 +106,8 @@ export default function ResumePageClient(props: Props) {
       return;
     }
 
+    triedFallbackRef.current = false;
+    modelRef.current = "gemini-2.5-flash";
     generateAnalysis(null);
   }
 
@@ -125,6 +151,7 @@ export default function ResumePageClient(props: Props) {
 
               <input
                 id="resume-upload"
+                ref={inputRef}
                 type="file"
                 accept=".pdf,.doc,.docx,.txt"
                 className="absolute inset-0 opacity-0 cursor-pointer"

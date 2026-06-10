@@ -6,15 +6,21 @@ import { aiAnalyzeSchema } from "./schemas";
 export async function analyzeResumeForJob({
   resumeFile,
   jobInfo,
+  model = "gemini-2.5-flash",
 }: {
   resumeFile: File;
   jobInfo: Pick<
     typeof JobInfoTable.$inferSelect,
     "title" | "experienceLevel" | "description"
   >;
+  model?: string;
 }) {
   return streamObject({
-    model: google("gemini-2.5-flash"),
+    model: google(model),
+    maxRetries: 4,
+    onError: ({ error }) => {
+      console.error("resume analyze stream error", error);
+    },
     schema: aiAnalyzeSchema,
     messages: [
       {

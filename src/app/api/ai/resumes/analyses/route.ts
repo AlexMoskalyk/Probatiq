@@ -45,9 +45,13 @@ export async function POST(req: Request) {
     });
   }
 
+  const model =
+    new URL(req.url).searchParams.get("model") ?? "gemini-2.5-flash";
+
   const res = await analyzeResumeForJob({
     resumeFile,
     jobInfo,
+    model,
   });
 
   return res.toTextStreamResponse();
