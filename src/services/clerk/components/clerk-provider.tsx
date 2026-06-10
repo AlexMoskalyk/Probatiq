@@ -7,5 +7,7 @@ interface Props {
 
 export function ClerkProvider(props: Props) {
   const { children } = props;
-  return <OriginalClerkProvider>{children}</OriginalClerkProvider>;
+  return (
+    <OriginalClerkProvider afterSignOutUrl="/">{children}</OriginalClerkProvider>
+  );
 }

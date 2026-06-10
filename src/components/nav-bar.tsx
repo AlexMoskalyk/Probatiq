@@ -76,7 +76,7 @@ export function Navbar(props: Props) {
                 <User className="mr-2" />
                 Profile
               </DropdownMenuItem>
-              <SignOutButton>
+              <SignOutButton redirectUrl="/">
                 <DropdownMenuItem>
                   <LogOut className="mr-2" />
                   Logout
