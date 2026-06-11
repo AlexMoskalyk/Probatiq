@@ -35,34 +35,7 @@ Give job seekers a low-pressure, repeatable way to rehearse interviews with feed
 npm install
 ```
 
-### 2. Configure environment variables
-
-Create a `.env.local` file in the project root with the following keys:
-
-```env
-# Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-CLERK_WEBHOOK_SIGNING_SECRET=
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=
-NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/dashboard
-NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/dashboard
-
-# Security / rate limiting
-ARCJET_KEY=
-ARCJET_ENV=development
-
-# Database
-DB_USER=
-DB_PASSWORD=
-DB_HOST=
-DB_PORT=5432
-DB_NAME=
-
-# (Add any additional keys required by the AI and voice providers used in this project.)
-```
-
-### 3. Set up the database
+### 2. Set up the database
 
 Apply the schema to your database:
 
@@ -83,7 +56,7 @@ You can browse and edit data with:
 npm run db:studio
 ```
 
-### 4. Run the app
+### 3. Run the app
 
 Start the development server:
 
@@ -93,7 +66,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### 5. Production build
+### 4. Production build
 
 ```bash
 npm run build
