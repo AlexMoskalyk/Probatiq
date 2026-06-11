@@ -1,0 +1,47 @@
+import { db } from "@/src/drizzle/db";
+import { JobInfoTable } from "@/src/drizzle/schema";
+import { eq } from "drizzle-orm";
+import { revalidateJobInfoCache } from "./db-cache";
+
+export async function insertJobInfo(jobInfo: typeof JobInfoTable.$inferInsert) {
+  const [newJobInfo] = await db.insert(JobInfoTable).values(jobInfo).returning({
+    id: JobInfoTable.id,
+    userId: JobInfoTable.userId,
+  });
+
+  revalidateJobInfoCache(newJobInfo);
+
+  return newJobInfo;
+}
+
+export async function updateJobInfo(
+  id: string,
+  jobInfo: Partial<typeof JobInfoTable.$inferInsert>,
+) {
+  const [updatedJobInfo] = await db
+    .update(JobInfoTable)
+    .set(jobInfo)
+    .where(eq(JobInfoTable.id, id))
+    .returning({
+      id: JobInfoTable.id,
+      userId: JobInfoTable.userId,
+    });
+
+  revalidateJobInfoCache(updatedJobInfo);
+
+  return updatedJobInfo;
+}
+
+export async function deleteJobInfo(id: string) {
+  const [deletedJobInfo] = await db
+    .delete(JobInfoTable)
+    .where(eq(JobInfoTable.id, id))
+    .returning({
+      id: JobInfoTable.id,
+      userId: JobInfoTable.userId,
+    });
+
+  revalidateJobInfoCache(deletedJobInfo);
+
+  return deletedJobInfo;
+}

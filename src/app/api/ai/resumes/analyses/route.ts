@@ -1,0 +1,67 @@
+import { db } from "@/src/drizzle/db";
+import { JobInfoTable } from "@/src/drizzle/schema";
+import { getJobInfoIdTag } from "@/src/features/job-infos/db-cache";
+import { analyzeResumeForJob } from "@/src/services/ai/resumes/ai";
+import { getCurrentUser } from "@/src/services/clerk/lib/get-current-user";
+import { and, eq } from "drizzle-orm";
+import { cacheTag } from "next/dist/server/use-cache/cache-tag";
+
+export async function POST(req: Request) {
+  const { userId } = await getCurrentUser();
+
+  if (userId == null) {
+    return new Response("You are not logged in", { status: 401 });
+  }
+
+  const formData = await req.formData();
+  const resumeFile = formData.get("resumeFile") as File;
+  const jobInfoId = formData.get("jobInfoId") as string;
+
+  if (!resumeFile || !jobInfoId) {
+    return new Response("Invalid request", { status: 400 });
+  }
+
+  if (resumeFile.size > 10 * 1024 * 1024) {
+    return new Response("File size exceeds 10MB limit", { status: 400 });
+  }
+
+  const allowedTypes = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "text/plain",
+  ];
+
+  if (!allowedTypes.includes(resumeFile.type)) {
+    return new Response("Please upload a PDF, Word document, or text file", {
+      status: 400,
+    });
+  }
+
+  const jobInfo = await getJobInfo(jobInfoId, userId);
+  if (jobInfo == null) {
+    return new Response("You do not have permission to do this", {
+      status: 403,
+    });
+  }
+
+  const model =
+    new URL(req.url).searchParams.get("model") ?? "gemini-2.5-flash";
+
+  const res = await analyzeResumeForJob({
+    resumeFile,
+    jobInfo,
+    model,
+  });
+
+  return res.toTextStreamResponse();
+}
+
+async function getJobInfo(id: string, userId: string) {
+  "use cache";
+  cacheTag(getJobInfoIdTag(id));
+
+  return db.query.JobInfoTable.findFirst({
+    where: and(eq(JobInfoTable.id, id), eq(JobInfoTable.userId, userId)),
+  });
+}
